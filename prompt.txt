@@ -1,0 +1,532 @@
+# MASTER PROMPT
+
+Act as a senior C programmer, Data Structures instructor, and Computer Graphics laboratory mentor.
+
+Generate a COMPLETE, COMPILABLE, and WELL-DOCUMENTED C program for a menu-driven 2D Graphics Editor using a character-based canvas.
+
+## PROJECT GOAL
+
+Design and implement a console-based 2D Graphics Editor that allows users to draw, modify, delete, and manage graphical objects on a 2D character canvas.
+
+The program must be suitable for a Data Structures and Graphics Programming laboratory assignment.
+
+---
+
+# TECHNICAL REQUIREMENTS
+
+## 1. Canvas System
+
+Use a global 2D character array as the drawing canvas.
+
+Example:
+
+```c
+#define WIDTH 50
+#define HEIGHT 20
+
+char canvas[HEIGHT][WIDTH];
+```
+
+Requirements:
+
+* Canvas size should be configurable using macros.
+* Initialize every cell with '_' (underscore).
+* Draw graphical objects using '*' (asterisk).
+* Prevent drawing outside canvas boundaries.
+* Support complete canvas redraw.
+
+---
+
+## 2. Shape Support
+
+Implement the following shape drawing functions:
+
+```c
+void drawLine(...);
+void drawRectangle(...);
+void drawTriangle(...);
+void drawCircle(...);
+```
+
+Each function must be implemented separately.
+
+---
+
+## 3. Drawing Algorithms
+
+### Line
+
+Use Bresenham’s Line Drawing Algorithm.
+
+Requirements:
+
+* Support all slopes.
+* Integer arithmetic only.
+
+### Circle
+
+Use Midpoint Circle Algorithm.
+
+Requirements:
+
+* Use circle symmetry.
+* Plot all 8 octants.
+
+### Rectangle
+
+Draw rectangle using four line segments.
+
+### Triangle
+
+Draw triangle using three line segments.
+
+---
+
+## 4. Shape Type Enumeration
+
+Use an enum:
+
+```c
+typedef enum
+{
+    LINE,
+    RECTANGLE,
+    TRIANGLE,
+    CIRCLE
+} ShapeType;
+```
+
+---
+
+## 5. Object Structure
+
+Create a graphical object structure:
+
+```c
+typedef struct
+{
+    int id;
+    ShapeType type;
+
+    int x1;
+    int y1;
+
+    int x2;
+    int y2;
+
+    int x3;
+    int y3;
+
+    int radius;
+
+    int visible;
+} GraphicObject;
+```
+
+Requirements:
+
+* Store all necessary shape information.
+* Every object must have a unique ID.
+* Maintain visibility status.
+
+---
+
+## 6. Object Storage
+
+Create an object database:
+
+```c
+#define MAX_OBJECTS 100
+
+GraphicObject objects[MAX_OBJECTS];
+```
+
+Requirements:
+
+* Store at least 100 objects.
+* Track object count.
+* Generate unique object IDs automatically.
+
+---
+
+# REQUIRED FUNCTIONS
+
+Generate complete implementations for:
+
+```c
+void initializeCanvas();
+void clearCanvas();
+void displayCanvas();
+
+void drawPixel(int x, int y);
+
+void drawLine(int x1, int y1, int x2, int y2);
+void drawRectangle(int x, int y, int width, int height);
+void drawTriangle(int x1,int y1,int x2,int y2,int x3,int y3);
+void drawCircle(int xc,int yc,int radius);
+
+void addObject();
+void deleteObject();
+void modifyObject();
+
+void redrawCanvas();
+
+void listObjects();
+
+void saveCanvasToFile();
+void loadCanvasFromFile();
+```
+
+---
+
+# MENU SYSTEM
+
+Create a loop-driven menu:
+
+```text
+============================
+2D GRAPHICS EDITOR
+============================
+
+1. Display Canvas
+2. Draw Line
+3. Draw Rectangle
+4. Draw Triangle
+5. Draw Circle
+6. Delete Object
+7. Modify Object
+8. List All Objects
+9. Clear Canvas
+10. Save Canvas
+11. Load Canvas
+12. Exit
+```
+
+Requirements:
+
+* Continue until Exit is selected.
+* Use switch-case.
+* Validate menu input.
+
+---
+
+# OBJECT CREATION
+
+### Draw Line
+
+Prompt:
+
+```text
+Enter x1 y1:
+Enter x2 y2:
+```
+
+Create object and store.
+
+---
+
+### Draw Rectangle
+
+Prompt:
+
+```text
+Enter top-left x y:
+Enter width:
+Enter height:
+```
+
+Store rectangle object.
+
+---
+
+### Draw Triangle
+
+Prompt:
+
+```text
+Enter x1 y1:
+Enter x2 y2:
+Enter x3 y3:
+```
+
+Store triangle object.
+
+---
+
+### Draw Circle
+
+Prompt:
+
+```text
+Enter center x y:
+Enter radius:
+```
+
+Store circle object.
+
+---
+
+# DELETE OBJECT
+
+Requirements:
+
+1. Ask for object ID.
+2. Search object list.
+3. Delete object.
+4. Shift remaining objects.
+5. Call redrawCanvas().
+
+Display messages:
+
+```text
+Object deleted successfully.
+```
+
+or
+
+```text
+Invalid Object ID.
+```
+
+---
+
+# MODIFY OBJECT
+
+Requirements:
+
+1. Select object using ID.
+2. Detect shape type.
+3. Ask for new parameters.
+4. Update object.
+5. Call redrawCanvas().
+
+Support modification of:
+
+* Line endpoints
+* Rectangle dimensions
+* Triangle vertices
+* Circle radius and center
+
+---
+
+# REDRAW SYSTEM
+
+Implement:
+
+```c
+void redrawCanvas();
+```
+
+Steps:
+
+1. Clear canvas.
+2. Iterate through object array.
+3. Redraw every visible object.
+
+This function must be used after:
+
+* deleteObject()
+* modifyObject()
+* clearCanvas()
+* loadCanvas()
+
+---
+
+# DISPLAY FUNCTION
+
+Implement:
+
+```c
+void displayCanvas();
+```
+
+Requirements:
+
+Display row and column borders.
+
+Example:
+
+```text
+   01234567890123456789
+  ---------------------
+0|____________________|
+1|_____****___________|
+2|_____****___________|
+3|____________________|
+```
+
+Make output neat and readable.
+
+---
+
+# LIST OBJECTS
+
+Implement:
+
+```c
+void listObjects();
+```
+
+Display:
+
+```text
+ID   TYPE        DETAILS
+----------------------------------
+1    LINE        (2,3) -> (10,7)
+2    RECTANGLE   (5,5) w=8 h=4
+3    CIRCLE      center=(20,10) r=5
+```
+
+---
+
+# FILE HANDLING
+
+Implement:
+
+```c
+void saveCanvasToFile();
+void loadCanvasFromFile();
+```
+
+Requirements:
+
+### Save
+
+Save canvas contents to:
+
+```text
+canvas.txt
+```
+
+### Load
+
+Load canvas contents from:
+
+```text
+canvas.txt
+```
+
+Handle file errors properly.
+
+---
+
+# INPUT VALIDATION
+
+Requirements:
+
+* Reject negative coordinates.
+* Reject invalid radius.
+* Reject width <= 0.
+* Reject height <= 0.
+* Reject coordinates outside canvas.
+* Reject invalid object IDs.
+* Prevent array overflow.
+
+Display meaningful error messages.
+
+---
+
+# PROGRAM STRUCTURE
+
+Generate code in the following order:
+
+1. Header files
+2. Macros
+3. Enum definitions
+4. Struct definitions
+5. Global variables
+6. Function prototypes
+7. Utility functions
+8. Drawing algorithms
+9. Object management functions
+10. File handling functions
+11. Menu functions
+12. Main function
+
+---
+
+# COMMENTS
+
+Add detailed comments for:
+
+* Bresenham algorithm
+* Midpoint Circle algorithm
+* Object management
+* Redraw mechanism
+* File handling
+
+Use professional educational comments.
+
+---
+
+# OUTPUT REQUIREMENTS
+
+After generating the code, also provide:
+
+## 1. GCC Compilation Command
+
+Example:
+
+```bash
+gcc graphics_editor.c -o graphics_editor
+```
+
+---
+
+## 2. Sample Execution
+
+Show a realistic example:
+
+* Draw rectangle
+* Draw circle
+* Display canvas
+* Delete object
+* Display canvas again
+
+---
+
+## 3. Complexity Analysis
+
+Provide:
+
+### Time Complexity
+
+For:
+
+* drawLine()
+* drawCircle()
+* redrawCanvas()
+* deleteObject()
+* modifyObject()
+
+### Space Complexity
+
+For:
+
+* Canvas
+* Object Array
+
+---
+
+## 4. Explanation Section
+
+Explain:
+
+* How objects are stored
+* How redraw works
+* Why Bresenham is used
+* Why Midpoint Circle is used
+
+---
+
+IMPORTANT:
+
+Generate the FULL source code in ONE response.
+
+Do NOT omit any function.
+
+Do NOT use pseudocode.
+
+Do NOT leave TODO comments.
+
+The code must compile successfully using GCC and demonstrate all requested functionality.
